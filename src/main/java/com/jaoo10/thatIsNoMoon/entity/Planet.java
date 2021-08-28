@@ -1,10 +1,20 @@
 package com.jaoo10.thatIsNoMoon.entity;
 
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-public class Planet extends EntityBase {
+@Document(collection = "tb_planet")
+@Data
+@AllArgsConstructor
+public class Planet {
 
-
+    @Id
+    private Integer id;
+    private String name;
+    private String climate;
+    private String terrain;
+    private Long numberOfFilms;
 
 }
