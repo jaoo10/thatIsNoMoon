@@ -1,11 +1,14 @@
 package com.jaoo10.thatIsNoMoon.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jaoo10.thatIsNoMoon.entity.Planet;
 import com.jaoo10.thatIsNoMoon.service.PlanetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -15,6 +18,14 @@ public class PlanetRestController {
 
     @Autowired
     private PlanetService planetService;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
     @GetMapping(value = "/")
     public List<Planet> getAllPlanets() {
@@ -41,6 +52,13 @@ public class PlanetRestController {
     public ResponseEntity<?> deletePlanetById(@PathVariable("id") Integer id) {
         planetService.delete(id);
         return new ResponseEntity("Planet deleted successfully", HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/readOriginal")
+    public String readOriginal() throws JsonProcessingException {
+
+        return restTemplate.getForObject("https://swapi.dev/api/planets",
+                String.class);
     }
 
 }
