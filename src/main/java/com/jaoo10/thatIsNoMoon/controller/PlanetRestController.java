@@ -45,7 +45,7 @@ public class PlanetRestController {
     @PostMapping(value = "/save")
     public ResponseEntity<?> savePlanet(@RequestBody Planet planet) {
         planetService.save(planet.getName(),planet.getClimate(), planet.getTerrain(),planet.getNumberOfFilms());
-        return new ResponseEntity("Planet added successfully", HttpStatus.OK);
+        return new ResponseEntity("Planet added successfully", HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/delete/{id}")
