@@ -3,6 +3,8 @@ package com.jaoo10.thatIsNoMoon.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jaoo10.thatIsNoMoon.entity.Planet;
 import com.jaoo10.thatIsNoMoon.service.PlanetService;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -44,6 +46,18 @@ public class PlanetRestController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> savePlanet(@RequestBody Planet planet) {
+        try {
+            String jsonString = restTemplate.getForObject("https://swapi.dev/api/planets/?search="
+                            +planet.getName(),
+                    String.class);
+            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONArray results = jsonObject.getJSONArray("results");
+            JSONObject result = results.getJSONObject(0);
+            JSONArray filmList = result.getJSONArray("films");
+            planet.setNumberOfFilms(Long.valueOf(filmList.length()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         planetService.save(planet.getName(),planet.getClimate(), planet.getTerrain(),planet.getNumberOfFilms());
         return new ResponseEntity("Planet added successfully", HttpStatus.CREATED);
     }
